@@ -2,7 +2,7 @@ namespace Feature.Product;
 using DTOs;
 public interface IProductRepository
 {
-    Task<GetAllProductOutput> GetAllProducts();
+    Task<GetAllProductOutput> GetAllProducts(string? filterQuery = null, string? categoryId = null);
     Task<CreateProductOutput> Save(CreateProductInput productDTO);
 
     Task<UpdateProductOutput> Update(UpdateProductInput input);

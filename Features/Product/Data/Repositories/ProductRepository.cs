@@ -11,9 +11,20 @@ public class ProductRepository : IProductRepository
         DataContext = dataContext;
     }
 
-    public Task<GetAllProductOutput> GetAllProducts()
+    public Task<GetAllProductOutput> GetAllProducts(string? filterQuery = null, string? categoryId = null)
     {
-        var productsDto = DataContext.Products!.Include(p => p.Category).ToList();
+        var productsDto = DataContext.Products!.Include(p => p.Category).AsQueryable();
+
+        if (!string.IsNullOrEmpty(filterQuery))
+        {
+            productsDto = productsDto.Where(p => p.Name.Contains(filterQuery));
+        }
+
+        if (!string.IsNullOrEmpty(categoryId))
+        {
+            productsDto = productsDto.Where(p => p.CategoryId == categoryId);
+        }
+        
         var output = new GetAllProductOutput(
             products: productsDto.Select(p => ProductMapper.FromDTO(p))
         );

@@ -15,11 +15,11 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public IActionResult Get([FromQuery(Name = "filterQuery")] string? filterQuery, [FromQuery(Name = "categoryId")] string? categoryId)
     {
         var json = new
         {
-            products = ProductRepository.GetAllProducts().Result.Products
+            products = ProductRepository.GetAllProducts(filterQuery, categoryId).Result.Products
         };
         return Ok(json);
     }
