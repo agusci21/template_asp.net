@@ -1,6 +1,7 @@
 
 using Core.Database;
 using DTOs;
+using Helpers;
 
 namespace Feature.User;
 
@@ -19,6 +20,7 @@ public class UserRepository : IUserRepository
             Email = input.Email,
             FirstName = input.FirstName,
             LastName = input.LastName,
+            Password = EncriptPasswordHelper.Encript(input.Password),
             PhoneNumber = input.PhoneNumber,
             PersonalIdentifier = input.PersonalIdentifier,
             Birthdate = input.Birthdate,
