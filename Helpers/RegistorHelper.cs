@@ -1,5 +1,7 @@
 using Feature.Product;
 using Feature.Category;
+using Feature.User;
+
 namespace Helpers.ReistorHelper;
 public static class RegistorHelper
 {
@@ -7,5 +9,6 @@ public static class RegistorHelper
     {
         CategoryModule.RegisterDependencies(services);
         ProductModule.RegisterDependencies(services);
+        UserModule.RegisterDependencies(services);
     }
 }
