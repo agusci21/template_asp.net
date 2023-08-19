@@ -34,4 +34,27 @@ public class UserRepository : IUserRepository
             UserDTO = userDTO
         };
     }
+
+    public Task<LoginOutput> Login(LoginInput input)
+    {
+        var user = DataContext.Users!.FirstOrDefault(p => p.Email == input.Email);
+        if(user == null)
+        {
+            return Task.FromResult(new LoginOutput{
+                Error = "user_not_found"
+            }); 
+        }
+
+        if(EncriptPasswordHelper.Encript(input.Password) != user.Password)
+        {
+            return Task.FromResult(
+                new LoginOutput{
+                    Error = "invalid_credentials"
+                }
+            );
+        }
+        return Task.FromResult(new LoginOutput{
+            User = UserMapper.FromDTO(user),
+        });
+    }
 }

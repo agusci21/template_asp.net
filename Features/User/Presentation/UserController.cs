@@ -1,4 +1,5 @@
 
+using Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feature.User;
@@ -37,6 +38,25 @@ public class UserController : ControllerBase
         return Ok(new
         {
             user
+        });
+    }
+
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> Login([FromBody] LoginInput input)
+    {
+        var output = await UserRepository.Login(input);
+
+        if(output.Error != null)
+        {
+            return NotFound(new {
+                output.Error
+            });
+        }
+        output.JWT = JWTHelper.GetSignature();
+        return Ok(new {
+            user = output.User,
+            token = output.JWT
         });
     }
 }
