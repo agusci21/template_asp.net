@@ -1,5 +1,6 @@
 
 using Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feature.User;
@@ -9,11 +10,14 @@ namespace Feature.User;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository UserRepository;
-    public UserController(IUserRepository userRepository)
+    private readonly ITokenRepository TokenRepository;
+    public UserController(IUserRepository userRepository, ITokenRepository tokenRepository)
     {
         UserRepository = userRepository;
+        TokenRepository = tokenRepository;
     }
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] CreateUserInput input)
     {
         var output = await UserRepository.CreateUser(input);
@@ -43,20 +47,25 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginInput input)
     {
         var output = await UserRepository.Login(input);
+        Console.WriteLine(output.User == null);
 
-        if(output.Error != null)
+        if(output.Error != null || output.User == null)
         {
-            return NotFound(new {
-                output.Error
-            });
+            var errorMessage = new {
+                error = output.Error
+            };
+            return output.Error == "user_not_found" ? NotFound(errorMessage) : BadRequest(errorMessage);
         }
-        output.JWT = JWTHelper.GetSignature();
+
+        var token = await TokenRepository.GetTokenAsync(output.User.Id);
+        
         return Ok(new {
             user = output.User,
-            token = output.JWT
+            token
         });
     }
 }

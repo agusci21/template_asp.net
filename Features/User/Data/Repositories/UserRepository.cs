@@ -37,7 +37,7 @@ public class UserRepository : IUserRepository
 
     public Task<LoginOutput> Login(LoginInput input)
     {
-        var user = DataContext.Users!.FirstOrDefault(p => p.Email == input.Email);
+        var user = DataContext.Users!.FirstOrDefault(p => p.Email.ToLower() == input.Email.ToLower());
         if(user == null)
         {
             return Task.FromResult(new LoginOutput{

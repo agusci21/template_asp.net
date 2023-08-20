@@ -1,12 +1,10 @@
 namespace Helpers;
-using System.Security.Cryptography;
-using System.Text;
 
 public static class JWTHelper
 {
-    public static string GetSignature ()
+    public static string GetSignature()
     {
-        DotNetEnv.Env.Load();
-        return "TODO: crear jwt";
+        string? salt = Environment.GetEnvironmentVariable("jwtsignature") ?? throw new ArgumentException("No enviroment variable founed ('JWTSIGNATURE')");
+        return salt;
     }
 }
