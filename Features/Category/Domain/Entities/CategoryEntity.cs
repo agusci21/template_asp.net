@@ -4,10 +4,12 @@ public class CategoryEntity
 {
     public string Id { get;}
     public string Name { get;}
-    public CategoryEntity (string id, string name)
+    public IEnumerable<ProductEntity>? Products { get;}
+    public CategoryEntity (string id, string name, IEnumerable<ProductEntity>? products)
     {
         Id = id;
         Name = name;
+        Products = products;
     }
 
 }

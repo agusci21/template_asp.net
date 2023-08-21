@@ -4,6 +4,7 @@ namespace Feature.Category;
 using System.Collections.ObjectModel;
 using Core.Database;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 
 public class CategoryRepository : ICategoryRepository
 {
@@ -16,7 +17,7 @@ public class CategoryRepository : ICategoryRepository
 
     public Task<GetAllCategoriesOutput> GetAllCategories()
     {
-        var categoriesDTOs = DataContext.Categories;
+        var categoriesDTOs = DataContext.Categories!.Include(p => p.Products).AsQueryable();
         var categoriesEntities = categoriesDTOs?.Select(p => CategoryMapper.FromDTO(p));
         var output = new GetAllCategoriesOutput(categories: categoriesEntities);
 
