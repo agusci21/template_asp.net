@@ -19,7 +19,19 @@ public class UserController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] CreateUserInput input)
-    {
+    {   
+        var searchUserInput = new SearchUserInput (){
+            Email = input.Email.ToLower(),
+        };
+
+        var previousUserOutput = await UserRepository.SearchUser(searchUserInput);
+
+        if(previousUserOutput.User != null)
+        {
+            return BadRequest(new {
+                error = "duplicated_email"
+            });
+        }
         var output = await UserRepository.CreateUser(input);
         if (output.UserDTO == null)
         {
@@ -51,7 +63,6 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginInput input)
     {
         var output = await UserRepository.Login(input);
-        Console.WriteLine(output.User == null);
 
         if(output.Error != null || output.User == null)
         {

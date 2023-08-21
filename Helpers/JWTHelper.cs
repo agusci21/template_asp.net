@@ -4,7 +4,8 @@ public static class JWTHelper
 {
     public static string GetSignature()
     {
-        string? salt = Environment.GetEnvironmentVariable("jwtsignature") ?? throw new ArgumentException("No enviroment variable founed ('JWTSIGNATURE')");
+        DotNetEnv.Env.Load();
+        string? salt = Environment.GetEnvironmentVariable("JWTSIGNATURE") ?? throw new ArgumentException("No enviroment variable founed ('JWTSIGNATURE')");
         return salt;
     }
 }

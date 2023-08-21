@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,13 @@ builder.Services.AddSwaggerGen();
 RegistorHelper.RegisterDependencies(builder.Services);
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddAuthorization();
+
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(
@@ -38,7 +46,7 @@ builder.Services
                 )
             }
     );
-    
+
 
 var app = builder.Build();
 
