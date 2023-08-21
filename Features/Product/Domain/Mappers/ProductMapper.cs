@@ -1,6 +1,5 @@
 namespace Feature.Product;
 using DTOs;
-using Feature.Category;
 
 public static class ProductMapper
 {

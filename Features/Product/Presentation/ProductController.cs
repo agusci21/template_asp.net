@@ -1,4 +1,3 @@
-using Feature.Category;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feature.Product;
