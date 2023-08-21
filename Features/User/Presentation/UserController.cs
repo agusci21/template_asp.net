@@ -40,6 +40,7 @@ public class UserController : ControllerBase
                 message = "could_not_create_user"
             });
         }
+        var token  = await TokenRepository.GetTokenAsync(output.UserDTO.Id);
 
         UserEntity user = new()
         {
@@ -53,7 +54,8 @@ public class UserController : ControllerBase
         };
         return Ok(new
         {
-            user
+            user,
+            token
         });
     }
 

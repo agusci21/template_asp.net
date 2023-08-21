@@ -2,7 +2,6 @@ namespace Core.Database;
 
 using Microsoft.EntityFrameworkCore;
 using DTOs;
-using Helpers;
 
 public class DataContext : DbContext
 {
@@ -11,6 +10,7 @@ public class DataContext : DbContext
     public DataContext(IConfiguration configuration)
     {
         Configuration = configuration;
+        Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -27,7 +27,6 @@ public class DataContext : DbContext
 
     public DbSet<ProductDTO>? Products { get; set; }
     public DbSet<CategoryDTO>? Categories { get; set; }
-
     public DbSet<UserDTO>? Users { get; set; }
 
 }
