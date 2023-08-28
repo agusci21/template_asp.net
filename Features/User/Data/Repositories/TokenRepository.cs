@@ -25,4 +25,17 @@ public class TokenRepository : ITokenRepository
 
         return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
     }
+
+    public Task<string?> GetUserIdFromToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwtToken = tokenHandler.ReadJwtToken(token);
+
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "user_id");
+
+
+        return Task.FromResult(userIdClaim?.Value);
+
+    }
+
 }
