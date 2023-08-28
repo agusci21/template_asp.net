@@ -13,7 +13,7 @@ public class ChatController : ControllerBase
     {
         MessageRepository = messageRepository;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAllMessages()
     {
@@ -22,5 +22,11 @@ public class ChatController : ControllerBase
         {
             messages = output.Messages
         });
+    }
+    [HttpPost]
+    [Route("send-message")]
+    public async Task<IActionResult> CreateMessage([FromHeader] string token )
+    {
+        return Ok(token);
     }
 }   
