@@ -1,5 +1,7 @@
 
 using Core.Database;
+using DTOs;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feature.Chat;
 
@@ -19,5 +21,32 @@ public class MessageRepository : IMessageRepository
         };
 
         return Task.FromResult(output);
+    }
+
+    public async Task<CreateMessageOutput> CreateMessage(CreateMessageInput input)
+    {
+        var existDestiny = DataContext.Users!.Find(input.DestinyId);
+        if(existDestiny == null)
+        {
+            return new CreateMessageOutput()
+            {
+                Error = "user_not_found"   
+            };
+        }
+        var MessageDTO = new MessageDTO()
+        {
+            Id = Guid.NewGuid().ToString(),
+            DestinyId = input.DestinyId,
+            OwnerId = input.OwnerId!,
+            Text = input.Text,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
+        await DataContext.Messages!.AddAsync(MessageDTO);
+        await DataContext.SaveChangesAsync();
+        return new CreateMessageOutput () 
+        {   
+           Message = MessageMapper.FromDTO(MessageDTO)
+        };
     }
 }

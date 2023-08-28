@@ -32,6 +32,15 @@ public class ChatController : ControllerBase
         var userId = await TokenRepository.GetUserIdFromToken(token);
         var input = messageInput;
         input.OwnerId = userId;
-        return Ok(input);
+        var output = await MessageRepository.CreateMessage(input);
+        if(output.IsOk())
+        {
+            return Ok(new {
+                message = output.Message,
+            });
+        }
+        return BadRequest( new {
+            error = output.Error
+        });
     }
 }
