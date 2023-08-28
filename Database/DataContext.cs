@@ -23,10 +23,12 @@ public class DataContext : DbContext
        ProductDTO.OnProductModelCreated(builder);
        CategoryDTO.OnCategoryModelCreated(builder);
        UserDTO.OnUserModelCreated(builder);
+       MessageDTO.OnMessageModelCreated(builder);
     }
 
     public DbSet<ProductDTO>? Products { get; set; }
     public DbSet<CategoryDTO>? Categories { get; set; }
     public DbSet<UserDTO>? Users { get; set; }
+    public DbSet<MessageDTO>? Messages { get; set; }
 
 }

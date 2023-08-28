@@ -1,5 +1,4 @@
 namespace Feature.Product;
-using DTOs;
 public interface IProductRepository
 {
     Task<GetAllProductOutput> GetAllProducts(string? filterQuery = null, string? categoryId = null);
