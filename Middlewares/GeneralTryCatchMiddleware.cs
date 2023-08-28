@@ -23,7 +23,6 @@ public class GeneralTryCatchMiddleware
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync("{\"message\": \"Internal Server Error\"}");
-
             Logger.LogError(e, "Middleware general error handler");
         }
     }

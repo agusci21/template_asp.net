@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 namespace DTOs;
 public class ProductDTO
 {
-
     public required string Id { get; set; }
     public required string Name { get; set; }
     public int Stock { get; set; }
     public double Price { get; set; }
     public string? CategoryId { get; set; }
     public CategoryDTO? Category { get; set; }
-
     public string? ImageUrl { get; set; }
 
     public DateTime CreatedAt { get; set; }

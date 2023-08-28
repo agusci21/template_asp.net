@@ -42,16 +42,7 @@ public class UserController : ControllerBase
         }
         var token  = await TokenRepository.GetTokenAsync(output.UserDTO.Id);
 
-        UserEntity user = new()
-        {
-            Id = output.UserDTO.Id,
-            FirstName = output.UserDTO.FirstName,
-            LastName = output.UserDTO.LastName,
-            Email = output.UserDTO.Email,
-            PhoneNumber = output.UserDTO.PhoneNumber,
-            PersonalIdentifier = output.UserDTO.PersonalIdentifier,
-            Birthdate = output.UserDTO.Birthdate,
-        };
+        UserEntity user = UserMapper.FromDTO(output.UserDTO);
         return Ok(new
         {
             user,
