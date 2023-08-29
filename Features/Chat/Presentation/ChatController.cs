@@ -33,14 +33,33 @@ public class ChatController : ControllerBase
         var input = messageInput;
         input.OwnerId = userId;
         var output = await MessageRepository.CreateMessage(input);
-        if(output.IsOk())
+        if (output.IsOk())
         {
-            return Ok(new {
+            return Ok(new
+            {
                 message = output.Message,
             });
         }
-        return BadRequest( new {
+        return BadRequest(new
+        {
             error = output.Error
+        });
+    }
+    [HttpGet]
+    [Route("{to}/")]
+    public async Task<IActionResult> GetMessages([FromHeader(Name = "x-token")] string token, [FromRoute(Name = "to")] string ToId)
+    {
+        var FirstUserId = await TokenRepository.GetUserIdFromToken(token);
+        var input = new GetMessagesInput()
+        {
+            SecondUserId = ToId,
+            FirstUserId = FirstUserId!
+        };
+        var output = await MessageRepository.GetMessages(input);
+
+        return Ok(new
+        {
+            messages = output.Messages
         });
     }
 }

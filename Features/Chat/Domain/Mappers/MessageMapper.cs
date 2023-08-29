@@ -10,6 +10,8 @@ public static class MessageMapper
         {
             Id = messageDTO.Id,
             Text = messageDTO.Text,
+            OwnerId = messageDTO.OwnerId,
+            DestinyId = messageDTO.DestinyId,
         };
     }
 }
