@@ -56,4 +56,6 @@ app.MapControllers();
 
 app.UseGeneralTryCatchMiddleware();
 
+app.UseWebSockets();
+
 app.Run();

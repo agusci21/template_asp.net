@@ -1,4 +1,6 @@
 
+using System.Net.WebSockets;
+using System.Text;
 using Feature.User;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +48,7 @@ public class ChatController : ControllerBase
         });
     }
     [HttpGet]
-    [Route("{to}/")]
+    [Route("{to}")]
     public async Task<IActionResult> GetMessages([FromHeader(Name = "x-token")] string token, [FromRoute(Name = "to")] string ToId)
     {
         var FirstUserId = await TokenRepository.GetUserIdFromToken(token);
@@ -61,5 +63,38 @@ public class ChatController : ControllerBase
         {
             messages = output.Messages
         });
+    }
+
+    [Route("websocket")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task WebSocket([FromHeader(Name = "x-token")] string token)
+    {
+        if (HttpContext.WebSockets.IsWebSocketRequest)
+        {
+            var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+            var userId = await TokenRepository.GetUserIdFromToken(token);
+            if (userId == null)
+            {
+                return;
+            }
+            await HandleWebSocket(userId, webSocket);
+        }
+        else
+        {
+            HttpContext.Response.StatusCode = 400;
+        }
+    }
+    private static async Task HandleWebSocket(string userId, WebSocket webSocket)
+    {
+        var buffer = new byte[1024];
+        WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+        while (!result.CloseStatus.HasValue)
+        {
+            var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+            
+            result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+        }
+        await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
     }
 }
