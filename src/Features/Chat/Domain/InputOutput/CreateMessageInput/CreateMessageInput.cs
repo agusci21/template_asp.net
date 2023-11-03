@@ -1,14 +1,9 @@
 namespace Feature.Chat;
 
-public class CreateMessageInput
+public struct CreateMessageInput
 {
-    public string? OwnerId { get; set; }
-    public required string DestinyId { get; set; }
-    public required string Text { get; set; }
+    public string? OwnerId;
+    public required string DestinyId;
+    public required string Text;
 
-    public CreateMessageInput(string destinyId, string text)
-    {
-        DestinyId = destinyId;
-        Text = text;
-    }
 }
